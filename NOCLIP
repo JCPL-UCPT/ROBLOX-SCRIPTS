@@ -1,0 +1,68 @@
+local Players = game:GetService("Players")
+local RunService = game:GetService("RunService")
+local player = Players.LocalPlayer
+local character = player.Character or player.CharacterAdded:Wait()
+
+-- GUI Setup
+local screenGui = Instance.new("ScreenGui", game.CoreGui)
+screenGui.Name = "CustomGui"
+
+local frame = Instance.new("Frame")
+frame.Size = UDim2.new(0, 110, 0, 50)
+frame.Position = UDim2.new(0.1, 0, 0.1, 0)
+frame.BackgroundColor3 = Color3.fromRGB(40, 40, 40)
+frame.Active = true
+frame.Draggable = true
+frame.Parent = screenGui
+Instance.new("UICorner", frame).CornerRadius = UDim.new(0, 8)
+
+-- Toggle Button
+local toggleBtn = Instance.new("TextButton")
+toggleBtn.Size = UDim2.new(0, 60, 0, 25)
+toggleBtn.Position = UDim2.new(0, 10, 0, 12)
+toggleBtn.BackgroundColor3 = Color3.fromRGB(70, 130, 180)
+toggleBtn.Text = "On"
+toggleBtn.TextColor3 = Color3.new(1, 1, 1)
+toggleBtn.Font = Enum.Font.Gotham
+toggleBtn.TextSize = 14
+toggleBtn.Parent = frame
+Instance.new("UICorner", toggleBtn).CornerRadius = UDim.new(0, 6)
+
+-- Close Button
+local closeBtn = Instance.new("TextButton")
+closeBtn.Size = UDim2.new(0, 25, 0, 25)
+closeBtn.Position = UDim2.new(1, -35, 0, 12)
+closeBtn.BackgroundColor3 = Color3.fromRGB(200, 60, 60)
+closeBtn.Text = "X"
+closeBtn.TextColor3 = Color3.new(1, 1, 1)
+closeBtn.Font = Enum.Font.Gotham
+closeBtn.TextSize = 14
+closeBtn.Parent = frame
+Instance.new("UICorner", closeBtn).CornerRadius = UDim.new(0, 6)
+
+-- NoClip Logic
+local noclipEnabled = true
+
+local function toggleNoclip(state)
+	noclipEnabled = state
+end
+
+RunService.Stepped:Connect(function()
+	if noclipEnabled and player.Character then
+		for _, part in ipairs(player.Character:GetDescendants()) do
+			if part:IsA("BasePart") and part.CanCollide then
+				part.CanCollide = false
+			end
+		end
+	end
+end)
+
+toggleBtn.MouseButton1Click:Connect(function()
+	noclipEnabled = not noclipEnabled
+	toggleBtn.Text = noclipEnabled and "On" or "Off"
+	toggleBtn.BackgroundColor3 = noclipEnabled and Color3.fromRGB(70, 130, 180) or Color3.fromRGB(200, 60, 60)
+end)
+
+closeBtn.MouseButton1Click:Connect(function()
+	screenGui:Destroy()
+end)
