@@ -240,7 +240,7 @@ placeButton.MouseButton1Click:Connect(function()
 			)
 
 			buildRemote:InvokeServer("Metal Sheet", CFrame.new(pos), workspace:WaitForChild("PlacedBuildings"):WaitForChild("Metal Sheet"):WaitForChild("Pivot"))
-			task.wait(0.04)
+			task.wait(0.01)
 		end
 	end
 
@@ -263,7 +263,7 @@ placeButton.MouseButton1Click:Connect(function()
 					8.742277657347586e-08, -1, 4.371138828673793e-08
 				)
 				buildRemote:InvokeServer("Metal Sheet", cframe, workspace:WaitForChild("PlacedBuildings"):WaitForChild("Metal Sheet"):WaitForChild("Pivot"))
-				task.wait(0.04)
+				task.wait(0.01)
 			end
 		end
 
@@ -284,7 +284,7 @@ placeButton.MouseButton1Click:Connect(function()
 					-1, -4.371138828673793e-08, 1.910685465164705e-15
 				)
 				buildRemote:InvokeServer("Metal Sheet", cframe, workspace:WaitForChild("PlacedBuildings"):WaitForChild("Metal Sheet"):WaitForChild("Pivot"))
-				task.wait(0.04)
+				task.wait(0.01)
 			end
 		end
 	end
@@ -316,7 +316,7 @@ placeButton.MouseButton1Click:Connect(function()
 			)
 
 			buildRemote:InvokeServer("Metal Sheet", CFrame.new(roofPos), workspace:WaitForChild("PlacedBuildings"):WaitForChild("Metal Sheet"):WaitForChild("Pivot"))
-			task.wait(0.04)
+			task.wait(0.01)
 		end
 	end
 
