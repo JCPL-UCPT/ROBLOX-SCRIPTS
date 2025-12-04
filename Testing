@@ -1,0 +1,32 @@
+local ReplicatedStorage = game:GetService("ReplicatedStorage")
+local BuildRequest = ReplicatedStorage:WaitForChild("Remotes"):WaitForChild("BuildRequest")
+
+-- List of builds
+local builds = {
+    {"Metal Truss", CFrame.new(127, 2, 199), workspace:WaitForChild("Surface")},
+    {"Metal Sheet", CFrame.new(127, 4.5, 199), Instance.new("TrussPart")},
+    {"Metal Sheet", CFrame.new(123, 4.5, 199), workspace:WaitForChild("PlacedBuildings"):WaitForChild("Metal Sheet"):WaitForChild("Pivot")},
+    {"Metal Sheet", CFrame.new(119, 4.5, 199), Instance.new("Part")},
+    {"Metal Sheet", CFrame.new(115, 4.5, 199), Instance.new("Part")},
+    {"Metal Sheet", CFrame.new(111, 4.5, 199), Instance.new("Part")},
+    {"Metal Truss", CFrame.new(111, 7, 199), Instance.new("Part")},
+    {"Metal Truss", CFrame.new(111, 11, 199), Instance.new("TrussPart")},
+    {"Metal Sheet", CFrame.new(111, 13.5, 199), Instance.new("TrussPart")},
+    {"Metal Sheet", CFrame.new(115, 13.5, 199), workspace:WaitForChild("PlacedBuildings"):WaitForChild("Metal Sheet"):WaitForChild("Pivot")},
+    {"Metal Sheet", CFrame.new(119, 13.5, 199), Instance.new("Part")},
+    {"Metal Sheet", CFrame.new(123, 13.5, 199), workspace:WaitForChild("PlacedBuildings"):WaitForChild("Metal Sheet"):WaitForChild("Pivot")},
+    {"Metal Sheet", CFrame.new(127, 13.5, 199), Instance.new("Part")},
+    {"Metal Sheet", CFrame.new(123, 4.5, 195), Instance.new("Part")},
+    {"Metal Sheet", CFrame.new(119, 4.5, 195), Instance.new("Part")},
+    {"Metal Sheet", CFrame.new(115, 4.5, 195), Instance.new("Part")},
+    {"Metal Sheet", CFrame.new(119, 4.5, 191), workspace:WaitForChild("PlacedBuildings"):WaitForChild("Metal Sheet"):WaitForChild("Pivot")},
+    {"Metal Sheet", CFrame.new(119, 4.5, 187), workspace:WaitForChild("PlacedBuildings"):WaitForChild("Metal Sheet"):WaitForChild("Pivot")},
+    {"Metal Sheet", CFrame.new(115, 4.5, 203), Instance.new("Part")},
+    {"Metal Sheet", CFrame.new(119, 4.5, 203), Instance.new("Part")},
+}
+
+-- Execute builds in order
+for _, build in ipairs(builds) do
+    local item, cframe, parent = unpack(build)
+    BuildRequest:InvokeServer(item, cframe, parent)
+end
