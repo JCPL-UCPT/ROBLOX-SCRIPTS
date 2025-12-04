@@ -31,5 +31,5 @@ local builds = {
 -- Run each build with 0.5s delay
 for _, build in ipairs(builds) do
     BuildRequest:InvokeServer(unpack(build))
-    task.wait(0.5)  -- half-second delay
+    task.wait(0.9)  -- half-second delay
 end
