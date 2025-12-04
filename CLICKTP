@@ -1,0 +1,88 @@
+local Players = game:GetService("Players")
+local RunService = game:GetService("RunService")
+
+local player = Players.LocalPlayer
+local mouse = player:GetMouse()
+local cam = workspace.CurrentCamera
+
+-- Character and HRP
+local char = player.Character
+local hrp = char and char:FindFirstChild("HumanoidRootPart")
+
+player.CharacterAdded:Connect(function(newChar)
+	char = newChar
+	hrp = char:WaitForChild("HumanoidRootPart")
+end)
+
+local clickTPEnabled = false
+local canTP = true
+
+-- GUI
+local gui = Instance.new("ScreenGui", player:WaitForChild("PlayerGui"))
+gui.Name = "ClickTPGUI"
+gui.ResetOnSpawn = false
+
+local frame = Instance.new("Frame", gui)
+frame.Size = UDim2.new(0, 160, 0, 60)
+frame.Position = UDim2.new(0.5, -80, 0.8, -30)
+frame.BackgroundColor3 = Color3.fromRGB(40, 40, 40)
+frame.BorderSizePixel = 0
+frame.Active = true
+frame.Draggable = true
+
+local toggleBtn = Instance.new("TextButton", frame)
+toggleBtn.Size = UDim2.new(0.7, 0, 0.6, 0)
+toggleBtn.Position = UDim2.new(0.15, 0, 0.25, 0)
+toggleBtn.BackgroundColor3 = Color3.fromRGB(0, 180, 255)
+toggleBtn.Text = "Click TP: OFF"
+toggleBtn.TextColor3 = Color3.new(1, 1, 1)
+toggleBtn.Font = Enum.Font.SourceSansBold
+toggleBtn.TextSize = 16
+
+local closeBtn = Instance.new("TextButton", frame)
+closeBtn.Size = UDim2.new(0, 20, 0, 20)
+closeBtn.Position = UDim2.new(1, -25, 0, 5)
+closeBtn.BackgroundColor3 = Color3.fromRGB(170, 0, 0)
+closeBtn.TextColor3 = Color3.new(1, 1, 1)
+closeBtn.Font = Enum.Font.SourceSansBold
+closeBtn.TextSize = 14
+closeBtn.Text = "X"
+
+closeBtn.MouseButton1Click:Connect(function()
+	gui:Destroy()
+end)
+
+toggleBtn.MouseButton1Click:Connect(function()
+	clickTPEnabled = not clickTPEnabled
+	if clickTPEnabled then
+		toggleBtn.Text = "Click TP: ON"
+		toggleBtn.BackgroundColor3 = Color3.fromRGB(0, 255, 200)
+	else
+		toggleBtn.Text = "Click TP: OFF"
+		toggleBtn.BackgroundColor3 = Color3.fromRGB(0, 180, 255)
+	end
+end)
+
+local function teleportToMouse()
+	if not canTP or not hrp or not char then return end
+	canTP = false
+
+	local unitRay = cam:ScreenPointToRay(mouse.X, mouse.Y)
+	local raycastParams = RaycastParams.new()
+	raycastParams.FilterDescendantsInstances = {char}
+	raycastParams.FilterType = Enum.RaycastFilterType.Blacklist
+
+	local raycastResult = workspace:Raycast(unitRay.Origin, unitRay.Direction * 1000, raycastParams)
+	if raycastResult then
+		local pos = raycastResult.Position + Vector3.new(0, 3, 0)
+		hrp.CFrame = CFrame.new(pos)
+	end
+
+	task.delay(0.15, function() canTP = true end)
+end
+
+mouse.Button1Down:Connect(function()
+	if clickTPEnabled then
+		teleportToMouse()
+	end
+end)
