@@ -1,8 +1,8 @@
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
 local BuildRequest = ReplicatedStorage:WaitForChild("Remotes"):WaitForChild("BuildRequest")
 
--- List of builds
-local builds = {
+-- Batch of builds
+local batchBuilds = {
     {"Metal Truss", CFrame.new(-83, 1.999998, -185), workspace:WaitForChild("Surface")},
     {"Metal Sheet", CFrame.new(-83, 4.499998, -185), workspace:WaitForChild("PlacedBuildings"):WaitForChild("Metal Truss"):WaitForChild("Pivot")},
     {"Metal Sheet", CFrame.new(-83, 4.499998, -181), workspace:WaitForChild("PlacedBuildings"):WaitForChild("Metal Sheet"):WaitForChild("Pivot")},
@@ -28,8 +28,13 @@ local builds = {
     {"Metal Sheet", CFrame.new(-71, 4.499998, -177), workspace:WaitForChild("PlacedBuildings"):WaitForChild("Metal Sheet"):WaitForChild("Pivot")},
 }
 
--- Run each build with 0.5s delay
-for _, build in ipairs(builds) do
-    BuildRequest:InvokeServer(unpack(build))
-    task.wait(0.9)  -- half-second delay
+-- Send them in a single loop with small delay between batches
+for i = 1, #batchBuilds, 5 do  -- 5 parts per batch
+    local batch = {}
+    for j = i, math.min(i+4, #batchBuilds) do
+        table.insert(batch, batchBuilds[j])
+    end
+    -- Send batch
+    BuildRequest:InvokeServer(batch)  -- make sure server can accept batch table
+    task.wait(0.2)  -- smaller delay between batches
 end
