@@ -1,88 +1,70 @@
 local Players = game:GetService("Players")
+local UserInputService = game:GetService("UserInputService")
 local RunService = game:GetService("RunService")
 
 local player = Players.LocalPlayer
 local mouse = player:GetMouse()
-local cam = workspace.CurrentCamera
 
--- Character and HRP
-local char = player.Character
-local hrp = char and char:FindFirstChild("HumanoidRootPart")
+-- GUI Setup
+local screenGui = Instance.new("ScreenGui", game.CoreGui)
+screenGui.Name = "ClickTPGui"
 
-player.CharacterAdded:Connect(function(newChar)
-	char = newChar
-	hrp = char:WaitForChild("HumanoidRootPart")
-end)
-
-local clickTPEnabled = false
-local canTP = true
-
--- GUI
-local gui = Instance.new("ScreenGui", player:WaitForChild("PlayerGui"))
-gui.Name = "ClickTPGUI"
-gui.ResetOnSpawn = false
-
-local frame = Instance.new("Frame", gui)
-frame.Size = UDim2.new(0, 160, 0, 60)
-frame.Position = UDim2.new(0.5, -80, 0.8, -30)
+local frame = Instance.new("Frame")
+frame.Size = UDim2.new(0, 110, 0, 50)
+frame.Position = UDim2.new(0.1, 0, 0.1, 0)
 frame.BackgroundColor3 = Color3.fromRGB(40, 40, 40)
-frame.BorderSizePixel = 0
 frame.Active = true
 frame.Draggable = true
+frame.Parent = screenGui
+Instance.new("UICorner", frame).CornerRadius = UDim.new(0, 8)
 
-local toggleBtn = Instance.new("TextButton", frame)
-toggleBtn.Size = UDim2.new(0.7, 0, 0.6, 0)
-toggleBtn.Position = UDim2.new(0.15, 0, 0.25, 0)
-toggleBtn.BackgroundColor3 = Color3.fromRGB(0, 180, 255)
-toggleBtn.Text = "Click TP: OFF"
+-- Toggle Button
+local toggleBtn = Instance.new("TextButton")
+toggleBtn.Size = UDim2.new(0, 60, 0, 25)
+toggleBtn.Position = UDim2.new(0, 10, 0, 12)
+toggleBtn.BackgroundColor3 = Color3.fromRGB(70, 130, 180)
+toggleBtn.Text = "On"
 toggleBtn.TextColor3 = Color3.new(1, 1, 1)
-toggleBtn.Font = Enum.Font.SourceSansBold
-toggleBtn.TextSize = 16
+toggleBtn.Font = Enum.Font.Gotham
+toggleBtn.TextSize = 14
+toggleBtn.Parent = frame
+Instance.new("UICorner", toggleBtn).CornerRadius = UDim.new(0, 6)
 
-local closeBtn = Instance.new("TextButton", frame)
-closeBtn.Size = UDim2.new(0, 20, 0, 20)
-closeBtn.Position = UDim2.new(1, -25, 0, 5)
-closeBtn.BackgroundColor3 = Color3.fromRGB(170, 0, 0)
-closeBtn.TextColor3 = Color3.new(1, 1, 1)
-closeBtn.Font = Enum.Font.SourceSansBold
-closeBtn.TextSize = 14
+-- Close Button
+local closeBtn = Instance.new("TextButton")
+closeBtn.Size = UDim2.new(0, 25, 0, 25)
+closeBtn.Position = UDim2.new(1, -35, 0, 12)
+closeBtn.BackgroundColor3 = Color3.fromRGB(200, 60, 60)
 closeBtn.Text = "X"
+closeBtn.TextColor3 = Color3.new(1, 1, 1)
+closeBtn.Font = Enum.Font.Gotham
+closeBtn.TextSize = 14
+closeBtn.Parent = frame
+Instance.new("UICorner", closeBtn).CornerRadius = UDim.new(0, 6)
 
-closeBtn.MouseButton1Click:Connect(function()
-	gui:Destroy()
-end)
+-- Feature Logic
+local enabled = true
 
 toggleBtn.MouseButton1Click:Connect(function()
-	clickTPEnabled = not clickTPEnabled
-	if clickTPEnabled then
-		toggleBtn.Text = "Click TP: ON"
-		toggleBtn.BackgroundColor3 = Color3.fromRGB(0, 255, 200)
-	else
-		toggleBtn.Text = "Click TP: OFF"
-		toggleBtn.BackgroundColor3 = Color3.fromRGB(0, 180, 255)
-	end
+	enabled = not enabled
+	toggleBtn.Text = enabled and "On" or "Off"
+	toggleBtn.BackgroundColor3 = enabled and Color3.fromRGB(70, 130, 180) or Color3.fromRGB(200, 60, 60)
 end)
 
-local function teleportToMouse()
-	if not canTP or not hrp or not char then return end
-	canTP = false
+closeBtn.MouseButton1Click:Connect(function()
+	screenGui:Destroy()
+end)
 
-	local unitRay = cam:ScreenPointToRay(mouse.X, mouse.Y)
-	local raycastParams = RaycastParams.new()
-	raycastParams.FilterDescendantsInstances = {char}
-	raycastParams.FilterType = Enum.RaycastFilterType.Blacklist
-
-	local raycastResult = workspace:Raycast(unitRay.Origin, unitRay.Direction * 1000, raycastParams)
-	if raycastResult then
-		local pos = raycastResult.Position + Vector3.new(0, 3, 0)
-		hrp.CFrame = CFrame.new(pos)
-	end
-
-	task.delay(0.15, function() canTP = true end)
-end
-
+-- Click TP Only
 mouse.Button1Down:Connect(function()
-	if clickTPEnabled then
-		teleportToMouse()
+	if enabled then
+		local target = mouse.Target
+		if target then
+			local pos = mouse.Hit.Position
+			local character = player.Character
+			if character and character:FindFirstChild("HumanoidRootPart") then
+				character:MoveTo(pos + Vector3.new(0, 3, 0))
+			end
+		end
 	end
 end)
