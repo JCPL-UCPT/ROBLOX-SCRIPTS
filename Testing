@@ -3,30 +3,33 @@ local BuildRequest = ReplicatedStorage:WaitForChild("Remotes"):WaitForChild("Bui
 
 -- List of builds
 local builds = {
-    {"Metal Truss", CFrame.new(127, 2, 199), workspace:WaitForChild("Surface")},
-    {"Metal Sheet", CFrame.new(127, 4.5, 199), Instance.new("TrussPart")},
-    {"Metal Sheet", CFrame.new(123, 4.5, 199), workspace:WaitForChild("PlacedBuildings"):WaitForChild("Metal Sheet"):WaitForChild("Pivot")},
-    {"Metal Sheet", CFrame.new(119, 4.5, 199), Instance.new("Part")},
-    {"Metal Sheet", CFrame.new(115, 4.5, 199), Instance.new("Part")},
-    {"Metal Sheet", CFrame.new(111, 4.5, 199), Instance.new("Part")},
-    {"Metal Truss", CFrame.new(111, 7, 199), Instance.new("Part")},
-    {"Metal Truss", CFrame.new(111, 11, 199), Instance.new("TrussPart")},
-    {"Metal Sheet", CFrame.new(111, 13.5, 199), Instance.new("TrussPart")},
-    {"Metal Sheet", CFrame.new(115, 13.5, 199), workspace:WaitForChild("PlacedBuildings"):WaitForChild("Metal Sheet"):WaitForChild("Pivot")},
-    {"Metal Sheet", CFrame.new(119, 13.5, 199), Instance.new("Part")},
-    {"Metal Sheet", CFrame.new(123, 13.5, 199), workspace:WaitForChild("PlacedBuildings"):WaitForChild("Metal Sheet"):WaitForChild("Pivot")},
-    {"Metal Sheet", CFrame.new(127, 13.5, 199), Instance.new("Part")},
-    {"Metal Sheet", CFrame.new(123, 4.5, 195), Instance.new("Part")},
-    {"Metal Sheet", CFrame.new(119, 4.5, 195), Instance.new("Part")},
-    {"Metal Sheet", CFrame.new(115, 4.5, 195), Instance.new("Part")},
-    {"Metal Sheet", CFrame.new(119, 4.5, 191), workspace:WaitForChild("PlacedBuildings"):WaitForChild("Metal Sheet"):WaitForChild("Pivot")},
-    {"Metal Sheet", CFrame.new(119, 4.5, 187), workspace:WaitForChild("PlacedBuildings"):WaitForChild("Metal Sheet"):WaitForChild("Pivot")},
-    {"Metal Sheet", CFrame.new(115, 4.5, 203), Instance.new("Part")},
-    {"Metal Sheet", CFrame.new(119, 4.5, 203), Instance.new("Part")},
+    {"Metal Truss", CFrame.new(-83, 1.999998, -185), workspace:WaitForChild("Surface")},
+    {"Metal Sheet", CFrame.new(-83, 4.499998, -185), workspace:WaitForChild("PlacedBuildings"):WaitForChild("Metal Truss"):WaitForChild("Pivot")},
+    {"Metal Sheet", CFrame.new(-83, 4.499998, -181), workspace:WaitForChild("PlacedBuildings"):WaitForChild("Metal Sheet"):WaitForChild("Pivot")},
+    {"Metal Sheet", CFrame.new(-83, 4.499998, -177), workspace:WaitForChild("PlacedBuildings"):WaitForChild("Metal Sheet"):WaitForChild("Pivot")},
+    {"Metal Sheet", CFrame.new(-83, 4.499998, -173), workspace:WaitForChild("PlacedBuildings"):WaitForChild("Metal Sheet"):WaitForChild("Pivot")},
+    {"Metal Sheet", CFrame.new(-83, 4.499998, -169), workspace:WaitForChild("PlacedBuildings"):WaitForChild("Metal Sheet"):WaitForChild("Pivot")},
+    {"Metal Truss", CFrame.new(-83, 6.999996, -169), workspace:WaitForChild("PlacedBuildings"):WaitForChild("Metal Sheet"):WaitForChild("Pivot")},
+    {"Metal Truss", CFrame.new(-83, 10.999996, -169), workspace:WaitForChild("PlacedBuildings"):WaitForChild("Metal Truss"):WaitForChild("Pivot")},
+    {"Metal Sheet", CFrame.new(-83, 13.499996, -169), workspace:WaitForChild("PlacedBuildings"):WaitForChild("Metal Truss"):WaitForChild("Pivot")},
+    {"Metal Sheet", CFrame.new(-83, 13.499996, -173), workspace:WaitForChild("PlacedBuildings"):WaitForChild("Metal Sheet"):WaitForChild("Pivot")},
+    {"Metal Sheet", CFrame.new(-83, 13.499996, -177), workspace:WaitForChild("PlacedBuildings"):WaitForChild("Metal Sheet"):WaitForChild("Pivot")},
+    {"Metal Sheet", CFrame.new(-83, 13.499996, -181), workspace:WaitForChild("PlacedBuildings"):WaitForChild("Metal Sheet"):WaitForChild("Pivot")},
+    {"Metal Sheet", CFrame.new(-83, 13.499996, -185), workspace:WaitForChild("PlacedBuildings"):WaitForChild("Metal Sheet"):WaitForChild("Pivot")},
+    {"Metal Sheet", CFrame.new(-87, 4.499998, -181), workspace:WaitForChild("PlacedBuildings"):WaitForChild("Metal Sheet"):WaitForChild("Pivot")},
+    {"Metal Sheet", CFrame.new(-87, 4.499998, -177), workspace:WaitForChild("PlacedBuildings"):WaitForChild("Metal Sheet"):WaitForChild("Pivot")},
+    {"Metal Sheet", CFrame.new(-87, 4.499998, -173), workspace:WaitForChild("PlacedBuildings"):WaitForChild("Metal Sheet"):WaitForChild("Pivot")},
+    {"Metal Sheet", CFrame.new(-91, 4.499998, -177), workspace:WaitForChild("PlacedBuildings"):WaitForChild("Metal Sheet"):WaitForChild("Pivot")},
+    {"Metal Sheet", CFrame.new(-95, 4.499998, -177), workspace:WaitForChild("PlacedBuildings"):WaitForChild("Metal Sheet"):WaitForChild("Pivot")},
+    {"Metal Sheet", CFrame.new(-79, 4.499998, -173), workspace:WaitForChild("PlacedBuildings"):WaitForChild("Metal Sheet"):WaitForChild("Pivot")},
+    {"Metal Sheet", CFrame.new(-79, 4.499998, -177), workspace:WaitForChild("PlacedBuildings"):WaitForChild("Metal Sheet"):WaitForChild("Pivot")},
+    {"Metal Sheet", CFrame.new(-79, 4.499998, -181), workspace:WaitForChild("PlacedBuildings"):WaitForChild("Metal Sheet"):WaitForChild("Pivot")},
+    {"Metal Sheet", CFrame.new(-75, 4.499998, -177), workspace:WaitForChild("PlacedBuildings"):WaitForChild("Metal Sheet"):WaitForChild("Pivot")},
+    {"Metal Sheet", CFrame.new(-71, 4.499998, -177), workspace:WaitForChild("PlacedBuildings"):WaitForChild("Metal Sheet"):WaitForChild("Pivot")},
 }
 
--- Execute builds in order
+-- Run each build with 0.5s delay
 for _, build in ipairs(builds) do
-    local item, cframe, parent = unpack(build)
-    BuildRequest:InvokeServer(item, cframe, parent)
+    BuildRequest:InvokeServer(unpack(build))
+    task.wait(0.5)  -- half-second delay
 end
