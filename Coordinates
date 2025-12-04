@@ -1,0 +1,92 @@
+-- Services
+local Players = game:GetService("Players")
+local LocalPlayer = Players.LocalPlayer
+local RunService = game:GetService("RunService")
+local UserInputService = game:GetService("UserInputService")
+local HttpService = game:GetService("HttpService") -- for clipboard
+
+-- GUI Setup
+local gui = Instance.new("ScreenGui")
+gui.Name = "CoordGui"
+gui.Parent = LocalPlayer:WaitForChild("PlayerGui")
+
+local frame = Instance.new("Frame")
+frame.Size = UDim2.new(0, 250, 0, 100)
+frame.Position = UDim2.new(0, 20, 0, 20)
+frame.BackgroundColor3 = Color3.fromRGB(40, 40, 40)
+frame.BorderSizePixel = 0
+frame.Active = true
+frame.Draggable = true
+frame.Parent = gui
+
+-- Close Button
+local closeBtn = Instance.new("TextButton")
+closeBtn.Size = UDim2.new(0, 25, 0, 25)
+closeBtn.Position = UDim2.new(1, -30, 0, 5)
+closeBtn.Text = "X"
+closeBtn.BackgroundColor3 = Color3.fromRGB(200, 50, 50)
+closeBtn.TextColor3 = Color3.new(1,1,1)
+closeBtn.Font = Enum.Font.SourceSansBold
+closeBtn.TextSize = 14
+closeBtn.Parent = frame
+closeBtn.MouseButton1Click:Connect(function()
+	gui:Destroy()
+end)
+
+-- Title
+local title = Instance.new("TextLabel")
+title.Size = UDim2.new(1, -35, 0, 25) -- leave space for X button
+title.Position = UDim2.new(0, 5, 0, 0)
+title.BackgroundTransparency = 1
+title.Text = "Current Coordinates"
+title.TextColor3 = Color3.fromRGB(255, 255, 255)
+title.Font = Enum.Font.SourceSansBold
+title.TextSize = 16
+title.TextXAlignment = Enum.TextXAlignment.Left
+title.Parent = frame
+
+-- Coordinates Label
+local coordLabel = Instance.new("TextLabel")
+coordLabel.Size = UDim2.new(1, -20, 0, 60)
+coordLabel.Position = UDim2.new(0, 10, 0, 30)
+coordLabel.BackgroundTransparency = 1
+coordLabel.TextColor3 = Color3.fromRGB(0, 255, 0)
+coordLabel.Font = Enum.Font.SourceSans
+coordLabel.TextSize = 16
+coordLabel.TextWrapped = true
+coordLabel.TextXAlignment = Enum.TextXAlignment.Left
+coordLabel.Parent = frame
+
+-- COPY Button
+local copyBtn = Instance.new("TextButton")
+copyBtn.Size = UDim2.new(0.5, -10, 0, 25)
+copyBtn.Position = UDim2.new(0.5, 5, 0, 70)
+copyBtn.Text = "COPY"
+copyBtn.BackgroundColor3 = Color3.fromRGB(0, 120, 255)
+copyBtn.TextColor3 = Color3.new(1,1,1)
+copyBtn.Font = Enum.Font.SourceSansBold
+copyBtn.TextSize = 14
+copyBtn.Parent = frame
+
+-- Update coordinates every frame
+RunService.RenderStepped:Connect(function()
+	local char = LocalPlayer.Character
+	if char and char:FindFirstChild("HumanoidRootPart") then
+		local pos = char.HumanoidRootPart.Position
+		coordLabel.Text = string.format("X: %.2f\nY: %.2f\nZ: %.2f", pos.X, pos.Y, pos.Z)
+	end
+end)
+
+-- Copy to clipboard
+copyBtn.MouseButton1Click:Connect(function()
+	local char = LocalPlayer.Character
+	if char and char:FindFirstChild("HumanoidRootPart") then
+		local pos = char.HumanoidRootPart.Position
+		local text = string.format("%.2f, %.2f, %.2f", pos.X, pos.Y, pos.Z)
+		if setclipboard then
+			setclipboard(text)
+		else
+			print("Coordinates:", text)
+		end
+	end
+end)
